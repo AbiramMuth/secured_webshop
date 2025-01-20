@@ -1,5 +1,9 @@
 module.exports = {
+    // https://localhost/user
     get: (req, res) => {
-        res.send("User: Sarah Test");
+        res.send("Bienvenu dans la page Utilisateur");
+    },
+    login: (req, res) => {
+       
     }
 };
