@@ -11,6 +11,8 @@ const sslOptions = {
 const app = express();
 const userRoute = require("./routes/User");
 app.use(express.static("public"));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use("/user", userRoute);
 
 https.createServer(sslOptions, app).listen(443, () => {
