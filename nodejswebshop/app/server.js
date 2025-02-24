@@ -2,35 +2,33 @@ const express = require("express");
 const path = require("path");
 const fs = require("fs");
 const https = require("https");
+const connection = require("./db/db");
 
 const sslOptions = {
   key: fs.readFileSync("./privkey.key"),
   cert: fs.readFileSync("./certificate.crt"),
 };
-
+// Initialisation de l'application express
 const app = express();
-const userRoute = require("./routes/User");
+
+// Middleware
 app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use("/user", userRoute);
 
+// Routes
+const userRoute = require("./routes/User");
+app.use("/", userRoute);
+
+// Lancement du serveur
 https.createServer(sslOptions, app).listen(443, () => {
-  console.log("Server running on port 443");
+  console.log("Server running on port https://localhost/user/login");
 });
 
-// Connexion à mysql
-const mysql = require("mysql2");
-
-const connection = mysql.createConnection({
-  port: "6033",
-  host: "localhost",
-  user: "root",
-  password: "root",
-  database: "secured_webshop",
-});
-
+/*
+// exports.connection = connection;
 connection.connect((err) => {
   if (err) throw err;
-  console.log("good");
+  console.log("la base de données est connectée");
 });
+*/
