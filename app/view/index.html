@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home</title>
+    <link rel="stylesheet" href="./css/style.css" />
+  </head>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="signup.html">Accueil</a></li>
+        <li><a href="profil.html">Profil</a></li>
+        <li><a href="login.html">Déconnexion</a></li>
+      </ul>
+    </nav>
+  </header>
+  <body>
+    <p id="welcome-message">Bienvenue</p>
+
+    <!-- Bouton pour accéder à l'administration (affiché uniquement si l'utilisateur est admin) -->
+    <button
+      id="admin-button"
+      style="display: none"
+      onclick="window.location.href='/user/admin'"
+    >
+      Accéder à l'administration
+    </button>
+  </body>
+</html>

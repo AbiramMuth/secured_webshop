@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profil</title>
+    <link rel="stylesheet" href="./css/style.css" />
+  </head>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="signup.html">Accueil</a></li>
+        <li><a href="profil.html">Profil</a></li>
+        <li><a href="login.html">Déconnexion</a></li>
+      </ul>
+    </nav>
+  </header>
+  <body>
+    <h1>Profil de l'utilisateur</h1>
+    <div id="profile-info">
+      <p><strong>Email:</strong> <span id="user-email"></span></p>
+      <p><strong>Rôle:</strong> <span id="user-role"></span></p>
+    </div>
+
+    <script>
+      // Charger les données du profil de l'utilisateur connecté
+      fetch("/user/profile", {
+        method: "GET",
+        credentials: "include", // Pour inclure les cookies de session
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.error) {
+            document.body.innerHTML =
+              "<h2>Accès refusé. Veuillez vous connecter.</h2>";
+          } else {
+            document.getElementById("user-email").textContent = data.email;
+            document.getElementById("user-role").textContent = data.role;
+          }
+        })
+        .catch((error) => console.error("Erreur:", error));
+    </script>
+  </body>
+</html>
