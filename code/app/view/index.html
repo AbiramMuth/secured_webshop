@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home</title>
+    <link rel="stylesheet" href="./css/style.css" />
+  </head>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="profil.html">Profil</a></li>
+        <li><a href="login.html">Déconnexion</a></li>
+      </ul>
+    </nav>
+  </header>
+  <body>
+    <h1 id="welcome-title">Bienvenue</h1>
+
+    <!-- Bouton pour accéder à l'administration (affiché uniquement si l'utilisateur est admin) -->
+    <button
+      id="admin-button"
+      style="display: none"
+      onclick="window.location.href='/user/admin'"
+    >
+      Accéder à l'administration
+    </button>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Récupérer les infos de l'utilisateur connecté
+        fetch("/user/profile", {
+          method: "GET",
+          credentials: "include",
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.error) {
+              document.body.innerHTML = "<h2>Accès refusé. Veuillez vous connecter.</h2>";
+            } else {
+              document.getElementById("welcome-title").textContent = "Bienvenue " + data.email;
+
+              // Afficher le bouton admin si l'utilisateur est un admin
+              if (data.role === 1) {
+                document.getElementById("admin-button").style.display = "block";
+              }
+            }
+          })
+          .catch((error) => console.error("Erreur:", error));
+      });
+    </script>
+  </body>
+</html>

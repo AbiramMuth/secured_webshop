@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Administrateur</title>
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+<body>
+  <header>
+    <nav>
+      <ul>
+        <li><a id="home-link" href="#">Accueil</a></li>
+        <li><a href="profil.html">Profil</a></li>
+        <li><a href="login.html">Déconnexion</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <h1 id="welcome-title">Bienvenue</h1>
+
+  <!-- Formulaire de recherche -->
+  <input type="text" id="search-email" placeholder="Rechercher par email" />
+  <button onclick="searchUsers()">Rechercher</button>
+
+  <h2>Liste des utilisateurs</h2>
+  <ul id="user-list"></ul>
+
+  <script>
+    // Charger les données du profil de l'utilisateur connecté
+    fetch("/user/profile", {
+      method: "GET",
+      credentials: "include",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.error) {
+          document.body.innerHTML = "<h2>Accès refusé. Veuillez vous connecter.</h2>";
+        } else {
+          document.getElementById("welcome-title").textContent = "Bienvenue " + data.email;
+        }
+      })
+      .catch((error) => console.error("Erreur:", error));
+
+    function searchUsers() {
+      const email = document.getElementById("search-email").value.trim();
+      if (email === "") {
+        loadUsers();
+        return;
+      }
+
+      fetch(`/user/admin/users/search?email=${email}`)
+        .then(response => response.json())
+        .then(data => {
+          displayUsers(data);
+        })
+        .catch(error => console.error("Erreur:", error));
+    }
+
+    function displayUsers(users) {
+      const userList = document.getElementById("user-list");
+      userList.innerHTML = "";
+      if (users.length === 0) {
+        userList.innerHTML = "<li>Aucun utilisateur trouvé</li>";
+        return;
+      }
+
+      users.forEach(user => {
+        const li = document.createElement("li");
+        const role = user.role === 1 ? "Admin" : "User";
+        li.textContent = `Email: ${user.email}, Rôle: ${role}`;
+        userList.appendChild(li);
+      });
+    }
+
+    function loadUsers() {
+      fetch("/user/admin/users")
+        .then(response => response.json())
+        .then(data => {
+          displayUsers(data);
+        })
+        .catch(error => console.error("Erreur:", error));
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      function getCookie(name) {
+        const cookies = document.cookie.split("; ");
+        for (let i = 0; i < cookies.length; i++) {
+          const [cookieName, cookieValue] = cookies[i].split("=");
+          if (cookieName === name) {
+            return cookieValue;
+          }
+        }
+        return null;
+      }
+
+      const homeLink = document.getElementById("home-link");
+      const role = getCookie("role");
+
+      if (role === "1") {
+        homeLink.href = "admin.html";
+      } else {
+        homeLink.href = "index.html";
+      }
+
+      loadUsers(); // Appel pour charger les utilisateurs dès le chargement de la page
+    });
+  </script>
+</body>
+</html>

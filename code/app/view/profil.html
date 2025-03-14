@@ -6,15 +6,16 @@
     <title>Profil</title>
     <link rel="stylesheet" href="./css/style.css" />
   </head>
-  <header>
-    <nav>
-      <ul>
-        <li><a href="signup.html">Accueil</a></li>
-        <li><a href="profil.html">Profil</a></li>
-        <li><a href="login.html">Déconnexion</a></li>
-      </ul>
-    </nav>
-  </header>
+    <header>
+      <nav>
+        <ul>
+          <li><a id="home-link" href="#">Accueil</a></li>
+
+          <li><a href="profil.html">Profil</a></li>
+          <li><a href="login.html">Déconnexion</a></li>
+        </ul>
+      </nav>
+    </header>
   <body>
     <h1>Profil de l'utilisateur</h1>
     <div id="profile-info">
@@ -39,6 +40,36 @@
           }
         })
         .catch((error) => console.error("Erreur:", error));
+
+  document.addEventListener("DOMContentLoaded", function () {
+    // Fonction pour récupérer un cookie par son nom
+    function getCookie(name) {
+      const cookies = document.cookie.split("; ");
+      for (let i = 0; i < cookies.length; i++) {
+        const [cookieName, cookieValue] = cookies[i].split("=");
+        if (cookieName === name) {
+          return cookieValue;
+        }
+      }
+      return null;
+    }
+
+    // Sélectionne le lien "Accueil"
+    const homeLink = document.getElementById("home-link");
+
+    // Récupère le rôle depuis les cookies
+    const role = getCookie("role");
+
+    // Redirige en fonction du rôle
+    if (role === "1") {
+      homeLink.href = "admin.html"; // rôle: Admin, admin.html
+    } else {
+      homeLink.href = "index.html"; // r?ole: Utilisateur, index.html
+    }
+  });
+</script>
+
+
     </script>
   </body>
 </html>

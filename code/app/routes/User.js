@@ -15,6 +15,7 @@ router.get("/home", auth, controller.home); // Route pour accéder à la page d'
 router.get("/admin", auth, controller.homeAdmin); // Route pour accéder à l'administration, accessible uniquement aux administrateurs authentifiés
 router.get("/logout", controller.logout); // Route pour se déconnecter
 router.get("/profil", auth, controller.profil);
+router.get("/profile", auth, controller.getProfile);
 // Route pour obtenir les informations de session de l'utilisateur authentifié
 /*router.get("/session", auth, (req, res) => {
   res.json({ email: req.user.email, role: req.user.role });  // Renvoie les données de l'utilisateur connecté*/

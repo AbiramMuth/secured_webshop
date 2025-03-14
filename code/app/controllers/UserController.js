@@ -65,17 +65,21 @@ module.exports = {
         { email: user.email, role: user.role },
         SECRET_KEY,
         { expiresIn: "1h" }
-      ); // Le token expire après 1 heure
+      );
+      
+      // Définir les cookies AVANT d'envoyer la réponse JSON
+      res.cookie("token", token, { httpOnly: true, secure: true, sameSite: "none" });
+      res.cookie("username", user.email, { httpOnly: true, secure: false });
+      res.cookie("role", user.role, { httpOnly: false, secure: false });
       res.json({
         success: true,
         message: "Connexion réussie",
         token,
         redirect: user.role === 1 ? "/admin.html" : "/index.html",
-      }); // Renvoie le token et la redirection appropriée en fonction du rôle (admin ou utilisateur)
-      res.cookie("token", token, {});
-      res.cookie("username", username, {});
-    });
-  },
+      });
+    }
+    );
+    },
 
   // Route pour gérer l'inscription d'un nouvel utilisateur
   signup: async (req, res) => {
@@ -106,6 +110,23 @@ module.exports = {
       });
     } catch (err) {
       return res.status(500).json({ message: "Erreur serveur." }); // En cas d'erreur dans le processus de hachage du mot de passe, renvoie une erreur serveur
+    }
+  },
+  getProfile: (req, res) => {
+    const token = req.cookies.token;
+
+    if(!token) {
+      return res.status(401).json({ message: "Utilisateur non authentifié !!!" });
+    }
+
+    try{
+      const decoded = jwt.verify(token, SECRET_KEY);
+      res.json({
+        email: decoded.email,
+        role: decoded.role === 1 ? "admin" : "user", // 1 pour admin, 0 pour utilisateur
+      });
+      } catch(err) {
+        return res.status(401).json({ message: "Token invalide ou expiré" });
     }
   },
 };
